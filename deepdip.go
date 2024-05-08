@@ -71,12 +71,12 @@ func getPB(w http.ResponseWriter, r *http.Request) {
 	}
 	playerID, err := tmio.GetPlayerID(username)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprint(w, "Player not found")
 		return
 	}
 	player, err := deepDipAPIPlayer(playerID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprint(w, "Player not found on DeepDip API")
 		return
 	}
 
@@ -95,7 +95,7 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 
 	leaderboard, err := deepDipAPILeaderboard()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprint(w, "Leaderboard not found PANIC")
 		return
 	}
 
@@ -119,12 +119,12 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 
 	playerID, err := tmio.GetPlayerID(username)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprint(w, "Player not found")
 		return
 	}
 	player, err := deepDipAPIPlayer(playerID)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprint(w, "Player not found on DeepDip API")
 		return
 	}
 
