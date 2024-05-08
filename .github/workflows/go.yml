@@ -26,10 +26,7 @@ jobs:
           GOOS=linux GOARCH=amd64 go build -o ${{ github.event.repository.name }} .
 
       - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.sha }}
           name: Release ${{ github.sha }}
@@ -38,3 +35,4 @@ jobs:
           files: |
             ${{ github.event.repository.name }}.exe
             ${{ github.event.repository.name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
