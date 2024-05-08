@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	tmio "github.com/Johnnycyan/go-tmio-sdk"
 )
@@ -63,6 +64,55 @@ func deepDipAPILeaderboard() (*Leaderboard, error) {
 	return &leaderboard, nil
 }
 
+func getTimeSince(ts int) string {
+	// takes a unix timestamp and returns a string of the time since that timestamp
+	// e.g. "1d 2h 3m 4s"
+
+	// get the current time
+	now := int(time.Now().Unix())
+
+	// calculate the difference
+	diff := now - ts
+
+	// calculate the days, hours, minutes, and seconds
+	days := diff / 86400
+	diff = diff % 86400
+	hours := diff / 3600
+	diff = diff % 3600
+	minutes := diff / 60
+	seconds := diff % 60
+
+	// build the string. Smallest possible format. So if there are any minutes we don't include seconds, if there are any hours we don't include minutes or seconds, etc. Example output: "3 hours ago", "A day ago", "2 days ago", "3 minutes ago", "A minute ago"
+	var result string
+	if days > 0 {
+		if days == 1 {
+			result = "A day ago"
+		} else {
+			result = strconv.Itoa(days) + " days ago"
+		}
+	} else if hours > 0 {
+		if hours == 1 {
+			result = "An hour ago"
+		} else {
+			result = strconv.Itoa(hours) + " hours ago"
+		}
+	} else if minutes > 0 {
+		if minutes == 1 {
+			result = "A minute ago"
+		} else {
+			result = strconv.Itoa(minutes) + " minutes ago"
+		}
+	} else {
+		if seconds == 1 {
+			result = "A second ago"
+		} else {
+			result = strconv.Itoa(seconds) + " seconds ago"
+		}
+	}
+
+	return result
+}
+
 func getPB(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -91,7 +141,8 @@ func getPB(w http.ResponseWriter, r *http.Request) {
 	}
 
 	roundedHeight := int(math.Round(player.Height))
-	fmt.Fprint(w, player.Name+" is rank #"+strconv.Itoa(player.Rank)+" ("+strconv.Itoa(roundedHeight)+"m)")
+	timeSince := getTimeSince(player.TS)
+	fmt.Fprint(w, player.Name+" is rank #"+strconv.Itoa(player.Rank)+" ("+strconv.Itoa(roundedHeight)+"m) ["+timeSince+"]")
 }
 
 func getLeaderboards(w http.ResponseWriter, r *http.Request) {
@@ -150,7 +201,8 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 			userString = ""
 		} else {
 			roundedHeight := int(math.Round(player.Height))
-			userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m"
+			timeSince := getTimeSince(player.TS)
+			userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m" + " [" + timeSince + "]"
 		}
 	} else {
 		userString = ""
