@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -30,8 +32,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.sha }}
-          name: Release ${{ github.sha }}
+          tag_name: ${{ github.ref == 'refs/heads/main' && github.sha || github.ref_name }}
+          name: Release ${{ github.ref == 'refs/heads/main' && github.sha || github.ref_name }}
           draft: false
           prerelease: false
           files: |
