@@ -132,23 +132,26 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 		playersString += medal + player.Name + " (" + strconv.Itoa(roundedHeight) + "m) "
 	}
 
-	playerID, err := tmio.GetPlayerID(username)
-	if err != nil {
-		fmt.Fprint(w, "Player not found")
-		return
-	}
-	player, err := deepDipAPIPlayer(playerID)
-	if err != nil {
-		fmt.Fprint(w, "Player not found on DeepDip API")
-		return
+	var player *DDPlayer
+	if usernameExists {
+		playerID, err := tmio.GetPlayerID(username)
+		if err != nil {
+			usernameExists = false
+		}
+		player, err = deepDipAPIPlayer(playerID)
+		if err != nil {
+			usernameExists = false
+		}
 	}
 
 	var userString string
-	if player.Rank == 0 {
-		userString = ""
-	} else if usernameExists {
-		roundedHeight := int(math.Round(player.Height))
-		userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m"
+	if usernameExists {
+		if player.Rank == 0 {
+			userString = ""
+		} else {
+			roundedHeight := int(math.Round(player.Height))
+			userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m"
+		}
 	} else {
 		userString = ""
 	}
