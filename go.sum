@@ -1,0 +1,4 @@
+github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508110851-a7de3ac670cd h1:41xBdwZqaBpU+bDjyFakeKPVNlJBEDSdI2Jkdi58rKU=
+github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508110851-a7de3ac670cd/go.mod h1:K9tGv+Oqdb6ZhdXSc5Rl0XDUrGMRY82jQbHW2FUIL50=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
