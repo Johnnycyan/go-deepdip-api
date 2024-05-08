@@ -2,5 +2,7 @@ github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508110851-a7de3ac670cd h1:41xBdwZq
 github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508110851-a7de3ac670cd/go.mod h1:K9tGv+Oqdb6ZhdXSc5Rl0XDUrGMRY82jQbHW2FUIL50=
 github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508112536-bf590ca50543 h1:iadNSEIzUcgFYrCIObOSgi5wiUcvmdPaRMzY6ir+f8M=
 github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508112536-bf590ca50543/go.mod h1:K9tGv+Oqdb6ZhdXSc5Rl0XDUrGMRY82jQbHW2FUIL50=
+github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508140218-f702e2aef4db h1:O+CfOAiDo6dOyUMOHRmt+5PciYkDj+5wqxCmS/l9I94=
+github.com/Johnnycyan/go-tmio-sdk v0.0.0-20240508140218-f702e2aef4db/go.mod h1:K9tGv+Oqdb6ZhdXSc5Rl0XDUrGMRY82jQbHW2FUIL50=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=

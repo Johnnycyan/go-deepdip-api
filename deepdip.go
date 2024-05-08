@@ -64,6 +64,11 @@ func deepDipAPILeaderboard() (*Leaderboard, error) {
 }
 
 func getPB(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Fprint(w, "User not found")
+		}
+	}()
 	username := r.URL.Query().Get("username")
 	if username == "" {
 		http.Error(w, "username is required", http.StatusBadRequest)
@@ -80,11 +85,21 @@ func getPB(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if player.Rank == 0 {
+		fmt.Fprint(w, "Player not found on DeepDip API")
+		return
+	}
+
 	roundedHeight := int(math.Round(player.Height))
 	fmt.Fprint(w, player.Name+" is rank #"+strconv.Itoa(player.Rank)+" ("+strconv.Itoa(roundedHeight)+"m)")
 }
 
 func getLeaderboards(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Fprint(w, "User not found")
+		}
+	}()
 	username := r.URL.Query().Get("username")
 	var usernameExists bool
 	if username == "" {
@@ -129,7 +144,9 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var userString string
-	if usernameExists {
+	if player.Rank == 0 {
+		userString = ""
+	} else if usernameExists {
 		roundedHeight := int(math.Round(player.Height))
 		userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m"
 	} else {
