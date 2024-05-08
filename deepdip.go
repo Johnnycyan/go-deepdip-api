@@ -131,7 +131,7 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 	var userString string
 	if usernameExists {
 		roundedHeight := int(math.Round(player.Height))
-		userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of (" + strconv.Itoa(roundedHeight) + "m)"
+		userString = "| " + player.Name + "'s PB is rank #" + strconv.Itoa(player.Rank) + " with a height of " + strconv.Itoa(roundedHeight) + "m"
 	} else {
 		userString = ""
 	}
