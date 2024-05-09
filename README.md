@@ -53,7 +53,7 @@ The go-deepdip-api is a software project designed to enhance user experience in 
 > ```
 Endpoint      |     URL
 ------------- | -------------
-PB  | `YOUR_URL/pb?username=<player-name>`
-Leaderboards  |  `YOUR_URL/leaderboards?username=<player-name>` (username optional)
+PB  | `localhost:<port>/pb?username=<player-name>`
+Leaderboards  |  `localhost:<port>/leaderboards?username=<player-name>` (username optional)
 
 ---
