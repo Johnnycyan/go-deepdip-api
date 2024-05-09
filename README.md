@@ -51,5 +51,9 @@ The go-deepdip-api is a software project designed to enhance user experience in 
 > ```console
 > $ go-deepdip-api.exe <port>
 > ```
+Endpoint      |     URL
+------------- | -------------
+PB  | `YOUR_URL/pb?username=<player-name>`
+Leaderboards  |  `YOUR_URL/leaderboards?username=<player-name>` (username optional)
 
 ---
