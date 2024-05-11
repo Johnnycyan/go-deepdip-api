@@ -23,6 +23,12 @@ type DDPlayer struct {
 
 type Leaderboard []DDPlayer
 
+type DDPlayerCurrent struct {
+	DisplayName string       `json:"display_name"`
+	UserID      string       `json:"user_id"`
+	Last5Points [][2]float64 `json:"last_5_points"`
+}
+
 func main() {
 	args := os.Args[1:]
 	if len(args) != 1 {
@@ -33,6 +39,7 @@ func main() {
 	fmt.Println("Listening on http://localhost:" + port)
 	http.HandleFunc("/pb", getPB)
 	http.HandleFunc("/leaderboards", getLeaderboards)
+	http.HandleFunc("/current", getCurrentHeight)
 	http.ListenAndServe(":"+port, nil)
 }
 
@@ -44,6 +51,20 @@ func deepDipAPIPlayer(playerID string) (*DDPlayer, error) {
 	}
 	defer resp.Body.Close()
 	var player DDPlayer
+	if err := json.NewDecoder(resp.Body).Decode(&player); err != nil {
+		return nil, err
+	}
+	return &player, nil
+}
+
+func deepDipAPIPlayerCurrent(playerID string) (*DDPlayerCurrent, error) {
+	url := fmt.Sprintf("https://dips-plus-plus.xk.io/live_heights/%s", playerID)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	var player DDPlayerCurrent
 	if err := json.NewDecoder(resp.Body).Decode(&player); err != nil {
 		return nil, err
 	}
@@ -124,6 +145,7 @@ func getPB(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "username is required", http.StatusBadRequest)
 		return
 	}
+	clean := r.URL.Query().Get("clean")
 	playerID, err := tmio.GetPlayerID(username)
 	if err != nil {
 		fmt.Fprint(w, "Player not found")
@@ -142,6 +164,10 @@ func getPB(w http.ResponseWriter, r *http.Request) {
 
 	roundedHeight := int(math.Round(player.Height))
 	timeSince := getTimeSince(player.TS)
+	if clean == "true" {
+		fmt.Fprint(w, strconv.Itoa(roundedHeight))
+		return
+	}
 	fmt.Fprint(w, player.Name+" is rank #"+strconv.Itoa(player.Rank)+" ("+strconv.Itoa(roundedHeight)+"m) ["+timeSince+"]")
 }
 
@@ -210,4 +236,33 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 
 	fullstring := "Current standing: " + playersString + userString
 	fmt.Fprint(w, fullstring)
+}
+
+func getCurrentHeight(w http.ResponseWriter, r *http.Request) {
+	username := r.URL.Query().Get("username")
+	clean := r.URL.Query().Get("clean")
+	playerID, err := tmio.GetPlayerID(username)
+	if err != nil {
+		fmt.Fprint(w, "Player not found")
+		return
+	}
+	player, err := deepDipAPIPlayerCurrent(playerID)
+	if err != nil {
+		fmt.Fprint(w, "Player not found on DeepDip API")
+		return
+	}
+
+	// [x][0] is the height, [x][1] is the unix timestamp of the height so find the most recent height by the largest timestamp
+	var height float64
+	for _, point := range player.Last5Points {
+		if point[1] > height {
+			height = (point[0])
+		}
+	}
+	roundedHeight := int(math.Round(height))
+	if clean == "true" {
+		fmt.Fprint(w, strconv.Itoa(roundedHeight))
+		return
+	}
+	fmt.Fprint(w, player.DisplayName+" is currently at "+strconv.Itoa(roundedHeight)+"m")
 }
