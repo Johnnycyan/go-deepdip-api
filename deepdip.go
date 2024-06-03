@@ -252,13 +252,7 @@ func getCurrentHeight(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// [x][0] is the height, [x][1] is the unix timestamp of the height so find the most recent height by the largest timestamp
-	var height float64
-	for _, point := range player.Last5Points {
-		if point[1] > height {
-			height = (point[0])
-		}
-	}
+	height := player.Last5Points[0][0]
 	roundedHeight := int(math.Round(height))
 	if clean == "true" {
 		fmt.Fprint(w, strconv.Itoa(roundedHeight))
