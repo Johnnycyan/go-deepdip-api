@@ -185,6 +185,13 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 		usernameExists = true
 	}
 
+	// define number of players to ignore
+	ignore := r.URL.Query().Get("ignore")
+	ignoreInt, err := strconv.Atoi(ignore)
+	if err != nil {
+		ignoreInt = 0
+	}
+
 	leaderboard, err := deepDipAPILeaderboard()
 	if err != nil {
 		fmt.Fprint(w, "Leaderboard not found PANIC")
@@ -206,6 +213,9 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 			medal = ""
 		}
 		roundedHeight := int(math.Round(player.Height))
+		if i < ignoreInt {
+			continue
+		}
 		playersString += medal + player.Name + " (" + strconv.Itoa(roundedHeight) + "m) "
 	}
 
@@ -234,7 +244,7 @@ func getLeaderboards(w http.ResponseWriter, r *http.Request) {
 		userString = ""
 	}
 
-	fullstring := "Current standing: " + playersString + userString
+	fullstring := playersString + userString
 	fmt.Fprint(w, fullstring)
 }
 
